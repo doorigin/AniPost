@@ -8,6 +8,7 @@ from pydantic import BaseModel
 
 router = APIRouter(
     prefix="/api/post",
+    tags=["post"]
 )
 
 @router.get("/list", response_model=list[post_schema.Question])
