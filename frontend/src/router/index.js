@@ -3,12 +3,24 @@ import MakePost from '../views/MakePost.vue';
 import UpdatePost from '../views/UpdatePost.vue';
 import PostDetail from '../views/PostDetail.vue';
 import home from '../views/home.vue'
+import LogIn from '../views/LogIn.vue'
+import SignUp from '../views/SignUp.vue'
 
 const routes = [
     {
         path: "/",
         name: 'Home',
         component: home
+    },
+    {
+        path: "/login",
+        name: 'Login',
+        component: LogIn
+    },
+    {
+        path: "/signup",
+        name: 'SignUp',
+        component: SignUp
     },
     {
         path: "/post/create",

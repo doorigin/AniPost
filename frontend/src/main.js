@@ -4,7 +4,10 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
 import router from './router'
 import './assets/styles/main.css'
+import store from './store/index.js'
 
 const app = createApp(App)
+
+app.use(store)
 app.use(router)
 app.mount('#app')

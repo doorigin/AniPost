@@ -80,7 +80,7 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
 
 
 
-@router.post("/token", response_model=user_schema.Token, tags=["user"])
+@router.post("/token", response_model=user_schema.Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
@@ -96,7 +96,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.post("/create", tags=["user"])
+@router.post("/create")
 async def user_create(_user_create: user_schema.UserCreate, db: Session = Depends(get_db)):
     db_user = User(username=_user_create.username,
                 full_name=_user_create.full_name,
@@ -107,11 +107,11 @@ async def user_create(_user_create: user_schema.UserCreate, db: Session = Depend
     db.commit()
     return {"Status":"ok", "data": "user created"}
 
-@router.get("/me", response_model=user_schema.User, tags=["user"])
+@router.get("/me", response_model=user_schema.User)
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
 
-@router.get("/me/items", tags=["user"])
+@router.get("/me/items")
 async def read_own_items(current_user: User = Depends(get_current_active_user), db: Session = Depends(get_db)):
     items = db.query(Post).filter(Post.user==current_user).all() 
     return items

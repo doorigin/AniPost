@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "vue": "^3.2.36",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-vuex": "~5.0.0"
+  }
+}
