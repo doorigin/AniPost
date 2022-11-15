@@ -8,8 +8,8 @@ from pydantic import BaseModel
 from domain.user.user_router import get_current_user
 
 router = APIRouter(
-    prefix="/api/post",
-    tags=["post"]
+    prefix="/api/posts",
+    tags=["posts"]
 )
 
 def get_post(db: Session, question_id: int):
@@ -17,34 +17,27 @@ def get_post(db: Session, question_id: int):
     return post
 
 @router.get("/list", response_model=list[post_schema.Post])
-def question_list(db: Session = Depends(get_db)):
-    _question_list = db.query(Post).order_by(Post.create_date.desc()).all()
+def post_search(search_tag: str | None = None, db: Session = Depends(get_db)):
+    if search_tag is None or search_tag == "":
+        _question_list = db.query(Post).order_by(Post.create_date.desc()).all()
+    else:
+        _question_list = db.query(Post).filter(Post.subject.contains(search_tag)).order_by(Post.create_date.desc()).all()
     return _question_list
 
-@router.get("/search/{search_tag}", response_model=list[post_schema.Post])
-def question_search(search_tag: str, db: Session = Depends(get_db)):
-    _question_list = db.query(Post).filter(Post.subject.contains(search_tag)).order_by(Post.create_date.desc()).all()
-    return _question_list
-
-
-class GetPost(BaseModel):
-    subject: str
-    content: str
-
-@router.post("/create_item")
-def create_item(post: GetPost, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+@router.post("/")
+def create_item(post: post_schema.GetPost, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     q = Post(subject=post.subject, content=post.content, create_date=datetime.now(), user=current_user)
     db.add(q)
     db.commit()
     return {"Status":"ok", "data": "item commited to DB"}
 
-@router.get("/{id}/detail", response_model=post_schema.Post)
-def question_detail(id: int, db: Session = Depends(get_db)):
+@router.get("/", response_model=post_schema.Post)
+def post_detail(id: int, db: Session = Depends(get_db)):
     _question = db.query(Post).get(id)
     return _question
 
-@router.put("/{id}/update", response_model=post_schema.Post)
-def question_update(id: int, post: GetPost, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+@router.put("/", response_model=post_schema.Post)
+def post_update(id: int, post: post_schema.GetPost, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_post = get_post(db, id)
     if not post:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
@@ -57,7 +50,7 @@ def question_update(id: int, post: GetPost, db: Session = Depends(get_db), curre
     db.commit()
     return db_post
 
-@router.delete("/{id}/delete")
+@router.delete("/")
 def delete_item(id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_post = get_post(db, id)
     if not db_post:
@@ -72,7 +65,7 @@ def delete_item(id: int, db: Session = Depends(get_db), current_user: User = Dep
     return {"Status":"ok", "data": "item deleted"}
 
 # comments
-@router.get("/{id}/comments")
+@router.get("/comments")
 def comment_list(id: int, db: Session = Depends(get_db)):
     _question = db.query(Post).get(id)
     return _question.comments
@@ -80,7 +73,7 @@ def comment_list(id: int, db: Session = Depends(get_db)):
 class GetComment(BaseModel):
     content: str
 
-@router.post("/{id}/create_comment")
+@router.post("/comments")
 def create_comment(id: int, comment: GetComment, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_post = get_post(db, id)
     if not db_post:
@@ -90,7 +83,7 @@ def create_comment(id: int, comment: GetComment, db: Session = Depends(get_db), 
     db.commit()
     return {"Status":"ok", "data": "item commited to DB"}
 
-@router.delete("/delete_comment/{comment_id}")
+@router.delete("/comments")
 def delete_comment(comment_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_comment = db.query(Comment).filter(Comment.id==comment_id).first()
     if not db_comment:

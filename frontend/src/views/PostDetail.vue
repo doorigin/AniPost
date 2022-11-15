@@ -78,31 +78,45 @@ export default {
   },
   async beforeCreate() {
     await axios
-      .get('http://127.0.0.1:8000/api/post/' + this.$route.params.id + '/detail')
+      .get('http://127.0.0.1:8000/api/posts' + '?id=' + this.$route.params.id)
       .then(response => (this.post = response.data))
     await axios
-      .get('http://127.0.0.1:8000/api/post/' + this.$route.params.id + '/comments')
+      .get('http://127.0.0.1:8000/api/posts/comments' + '?id=' + this.$route.params.id)
       .then(response => (this.comments = response.data))
   },
   methods: {
     DeletePost() {
-        axios.delete(`http://127.0.0.1:8000/api/post/${this.$route.params.id}/delete`)
+        let token = localStorage.getItem('access_token')
+        console.log(token)
+        axios.delete('http://127.0.0.1:8000/api/posts' + '?id=' + this.$route.params.id, {
+            headers: {
+                'accept': 'application/json',
+                'Authorization': `bearer ${token}`
+            }
+        })
     },
     CreateComment() {
+        let token = localStorage.getItem('access_token')
         axios({
             method: 'post',
-            url: `http://127.0.0.1:8000/api/post/${this.$route.params.id}/create_comment/`,
+            url: 'http://127.0.0.1:8000/api/posts/comments' + '?id=' + this.$route.params.id,
             data: JSON.stringify({
                 "content": this.new_comment
             }),
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${token}`
             }
         })
     },
     DeleteComment(id) {
-        axios.delete(`http://127.0.0.1:8000/api/post/delete_comment/${id}`)
+        let token = localStorage.getItem('access_token')
+        axios.delete(`http://127.0.0.1:8000/api/post/delete_comment/${id}`, {
+            headers: {
+                'Authorization': `bearer ${token}`
+            }
+        })
         this.$router.go(0);
     }
   },

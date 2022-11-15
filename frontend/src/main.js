@@ -6,7 +6,13 @@ import router from './router'
 import './assets/styles/main.css'
 import store from './store/index.js'
 
-const app = createApp(App)
+const app = createApp({
+        extends: App,
+        beforeCreate() {
+            this.$store.dispatch("getUserInfo")
+        }
+    })
+    
 
 app.use(store)
 app.use(router)

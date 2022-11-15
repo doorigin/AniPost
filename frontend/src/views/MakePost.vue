@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <div>{{this.$store.state.token}}</div>
         <h5 class="my-3 border-bottom pb-2">질문 등록</h5>
         <form action="/" class="my-3">
             <div class="mb-3">
@@ -28,16 +29,18 @@ export default {
     },
     methods: {
         CreatePost() {
+            let token = localStorage.getItem("access_token")
             axios({
                 method: 'post',
-                url: 'http://127.0.0.1:8000/api/post/create_item',
+                url: 'http://127.0.0.1:8000/api/posts',
                 data: JSON.stringify({
                     "subject": this.subject,
                     "content": this.content
                 }),
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `bearer ${token}`
                 }
             })
         }

@@ -27,22 +27,24 @@ export default {
         }
     },
     async created() {
-        var PrevPost = await axios.get(`http://127.0.0.1:8000/api/post/${this.$route.params.id}/detail`)
+        var PrevPost = await axios.get('http://127.0.0.1:8000/api/posts' + '?id=' + this.$route.params.id)
         this.subject = PrevPost.data.subject
         this.content = PrevPost.data.content
     },
     methods: {
         UpdatePost() {
+            let token = localStorage.getItem('access_token')
             axios({
                 method: 'put',
-                url: `http://127.0.0.1:8000/api/post/${this.$route.params.id}/update`,
+                url: 'http://127.0.0.1:8000/api/posts' + '?id=' + this.$route.params.id,
                 data: JSON.stringify({
                     "subject": this.subject,
                     "content": this.content
                 }),
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `bearer ${token}`
                 }
             })
         }

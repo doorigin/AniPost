@@ -17,3 +17,8 @@ class Comment(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class GetPost(BaseModel):
+    subject: str
+    content: str

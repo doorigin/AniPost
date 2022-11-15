@@ -57,20 +57,17 @@ export default {
   },
   async created() {
     await axios
-      .get('http://127.0.0.1:8000/api/post/list')
+      .get('http://127.0.0.1:8000/api/posts/list')
       .then(response => (this.postdata = response.data))
   },
-  methods: { //method가 아니고 query param으로 해결할것 (?search=제목2)
+  methods: { //method가 아니고 query param으로 해결할것 (?search=제목2) url 바꾸는 식으로
     SearchKeyword() {
-      if(this.searchkeyword == ("" | null)) {
-        axios
-        .get('http://127.0.0.1:8000/api/post/list')
-        .then(response => (this.postdata = response.data))
-      } else {
+      const paramsObj = {search_tag: this.searchkeyword}
+      let queryParams = new URLSearchParams(paramsObj)
       axios
-      .get('http://127.0.0.1:8000/api/post/search/'+this.searchkeyword)
+      .get('http://127.0.0.1:8000/api/posts/list' + '?' + queryParams.toString())
       .then(response => (this.postdata = response.data))
-    }}
+    }
   },
   computed: {
     ...mapState(["userInfo"])
