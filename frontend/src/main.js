@@ -5,15 +5,14 @@ import 'bootstrap/dist/js/bootstrap.min.js'
 import router from './router'
 import './assets/styles/main.css'
 import store from './store/index.js'
+import CKEditor from '@ckeditor/ckeditor5-vue'
 
 const app = createApp({
         extends: App,
-        beforeCreate() {
-            this.$store.dispatch("getUserInfo")
-        }
     })
     
-
+app.use(CKEditor)
 app.use(store)
 app.use(router)
+
 app.mount('#app')

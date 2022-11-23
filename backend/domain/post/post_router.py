@@ -16,7 +16,8 @@ def get_post(db: Session, question_id: int):
     post = db.query(Post).get(question_id)
     return post
 
-@router.get("/list", response_model=list[post_schema.Post])
+# @router.get("/list", response_model=list[post_schema.Post])
+@router.get("/list")
 def post_search(search_tag: str | None = None, db: Session = Depends(get_db)):
     if search_tag is None or search_tag == "":
         _question_list = db.query(Post).order_by(Post.create_date.desc()).all()
@@ -24,19 +25,19 @@ def post_search(search_tag: str | None = None, db: Session = Depends(get_db)):
         _question_list = db.query(Post).filter(Post.subject.contains(search_tag)).order_by(Post.create_date.desc()).all()
     return _question_list
 
-@router.post("/")
+@router.post("")
 def create_item(post: post_schema.GetPost, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     q = Post(subject=post.subject, content=post.content, create_date=datetime.now(), user=current_user)
     db.add(q)
     db.commit()
     return {"Status":"ok", "data": "item commited to DB"}
 
-@router.get("/", response_model=post_schema.Post)
+@router.get("", response_model=post_schema.Post)
 def post_detail(id: int, db: Session = Depends(get_db)):
     _question = db.query(Post).get(id)
     return _question
 
-@router.put("/", response_model=post_schema.Post)
+@router.put("", response_model=post_schema.Post)
 def post_update(id: int, post: post_schema.GetPost, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_post = get_post(db, id)
     if not post:
@@ -50,7 +51,7 @@ def post_update(id: int, post: post_schema.GetPost, db: Session = Depends(get_db
     db.commit()
     return db_post
 
-@router.delete("/")
+@router.delete("")
 def delete_item(id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_post = get_post(db, id)
     if not db_post:

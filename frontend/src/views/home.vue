@@ -31,9 +31,9 @@
         <tr v-for="(a, i) in postdata" :key="i" class="text-center">
             <td>{{postdata[i].id}}</td>
             <td>
-                <router-link :to="`/post/view/${postdata[i].id}`">{{postdata[i].subject}}</router-link>
+                <router-link :to="`/post/view?id=${postdata[i].id}`">{{postdata[i].subject}}</router-link>
             </td>
-            <td>글쓴이</td>
+            <td>{{postdata[i].user_id}}</td>
             <td>{{postdata[i].create_date}}</td>
         </tr>
         

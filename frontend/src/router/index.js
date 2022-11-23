@@ -33,7 +33,7 @@ const routes = [
         component: UpdatePost
     },
     {
-        path: "/post/view/:id",
+        path: "/post/view",
         name: 'PostDetail',
         component: PostDetail
     }

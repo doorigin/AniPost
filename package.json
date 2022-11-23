@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^35.3.2",
+    "@ckeditor/ckeditor5-vue": "^4.0.1",
     "vue": "^3.2.36",
     "vue-cookies": "^1.8.2",
     "vuex": "^4.0.2"

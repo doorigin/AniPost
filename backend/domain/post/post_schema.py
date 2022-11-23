@@ -4,6 +4,7 @@ class Post(BaseModel):
     id: int
     subject: str
     content: str
+    user_id: str
     create_date: datetime.datetime
 
     class Config:

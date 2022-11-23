@@ -2,40 +2,50 @@
     <div class="container">
         <div>{{this.$store.state.token}}</div>
         <h5 class="my-3 border-bottom pb-2">질문 등록</h5>
-        <form action="/" class="my-3">
+        <div class="my-3">
             <div class="mb-3">
                 <label for="subject">제목</label>
                 <input v-model="subject" type="text" class="form-control">
             </div>
             <div class="mb-3">
                 <label for="content">내용</label>
-                <textarea v-model="content" class="form-control" rows="10"></textarea>
+                <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
             </div>
-            <a @click="CreatePost" href="/" class="btn btn-primary">저장하기</a>
-        </form>
+            <a @click="CreatePost" class="btn btn-primary">저장하기</a>
+        </div>
+
     </div>
 </template>
 
 <script>
 import axios from 'axios'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 export default {
     name: 'MakePost',
     data() {
         return {
             subject: null,
-            content: null
+            editor: ClassicEditor,
+            editorData: '<p>Content of the editor.</p>',
+            editorConfig: {
+                // The configuration of the editor.
+            }
         }
     },
+    components: {
+
+        },
     methods: {
         CreatePost() {
             let token = localStorage.getItem("access_token")
+            console.log(this.editorData)
             axios({
                 method: 'post',
                 url: 'http://127.0.0.1:8000/api/posts',
                 data: JSON.stringify({
                     "subject": this.subject,
-                    "content": this.content
+                    "content": this.editorData
                 }),
                 headers: {
                     'Accept': 'application/json',
@@ -44,10 +54,12 @@ export default {
                 }
             })
         }
-    },
+    }
 }
 </script>
 
 <style>
-
+.ck-editor__editable {
+    min-height: 300px
+}
 </style>

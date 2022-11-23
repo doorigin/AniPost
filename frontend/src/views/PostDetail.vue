@@ -3,9 +3,10 @@
     <!-- 질문 -->
     <h2 class="border-bottom py-2">{{post.subject}}</h2>
     <div class="card my-3">
+        <p v-html="post.content"></p>
         <div class="card-body">
             <div class="card-text">
-                {{post.content}}
+                some text
             </div>
             <div class="d-flex justify-content-end">
                 <div class="badge bg-light text-dark p-2 text-start">
@@ -18,7 +19,7 @@
                     추천
                     <span class="badge rounded-pill bg-success">1</span>
                 </button>
-                <router-link :to="`/post/modify/${this.$route.params.id}`" class="btn btn-sm btn-outline-secondary">수정</router-link>
+                <router-link :to="`/post/modify/${this.$route.query.id}`" class="btn btn-sm btn-outline-secondary">수정</router-link>
                 <a href="/" @click="DeletePost" class="btn btn-sm btn-outline-secondary">삭제</a>
             </div>
         </div>
@@ -78,17 +79,17 @@ export default {
   },
   async beforeCreate() {
     await axios
-      .get('http://127.0.0.1:8000/api/posts' + '?id=' + this.$route.params.id)
+      .get('http://127.0.0.1:8000/api/posts' + '?id=' + this.$route.query.id)
       .then(response => (this.post = response.data))
     await axios
-      .get('http://127.0.0.1:8000/api/posts/comments' + '?id=' + this.$route.params.id)
+      .get('http://127.0.0.1:8000/api/posts/comments' + '?id=' + this.$route.query.id)
       .then(response => (this.comments = response.data))
   },
   methods: {
     DeletePost() {
         let token = localStorage.getItem('access_token')
         console.log(token)
-        axios.delete('http://127.0.0.1:8000/api/posts' + '?id=' + this.$route.params.id, {
+        axios.delete('http://127.0.0.1:8000/api/posts' + '?id=' + this.$route.query.id, {
             headers: {
                 'accept': 'application/json',
                 'Authorization': `bearer ${token}`
@@ -99,7 +100,7 @@ export default {
         let token = localStorage.getItem('access_token')
         axios({
             method: 'post',
-            url: 'http://127.0.0.1:8000/api/posts/comments' + '?id=' + this.$route.params.id,
+            url: 'http://127.0.0.1:8000/api/posts/comments' + '?id=' + this.$route.query.id,
             data: JSON.stringify({
                 "content": this.new_comment
             }),
