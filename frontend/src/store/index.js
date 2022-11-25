@@ -31,7 +31,7 @@ export default createStore({
   actions: {
     login({ dispatch, commit }, loginObj) {
       axios
-        .post("http://127.0.0.1:8000/api/user/token", loginObj, {
+        .post("user/token", loginObj, {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
@@ -43,19 +43,22 @@ export default createStore({
           dispatch('getUserInfo')
           commit('setToken', token)
         })
-        .catch(() => {
-          alert('이메일과 비밀번호를 확인하세요')
+        .catch((error) => {
+          alert(error)
         })
+      // this.$router.push("/")
       },
     getUserInfo({ commit }) {
-      let token = localStorage.getItem("access_token")
+      // let token = localStorage.getItem("access_token")
       let config = {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
+        // headers: {
+        //   "Authorization": `Bearer ${token}`
+        // }
+        withCredentials: true,
+        // credentials: 'include'
       }
       axios
-        .get("http://127.0.0.1:8000/api/user/me", config)
+        .get("user/me", config)
         .then(response => {
           console.log(response.data)
           let userInfo = {

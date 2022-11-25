@@ -10,7 +10,7 @@
                 <label for="password">비밀번호</label>
                 <input type="password" class="form-control" id="password" v-model="password">
             </div>
-            <router-link to="/" type="button" class="btn btn-primary" @click="login({username, password})">로그인</router-link>
+            <button type="button" class="btn btn-primary" @click="login({username, password})">로그인</button>
         </form>
     </div>
 </template>

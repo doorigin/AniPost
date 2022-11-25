@@ -32,7 +32,7 @@ export default {
         }
     },
     async created() {
-        var PrevPost = await axios.get('http://127.0.0.1:8000/api/posts' + '?id=' + this.$route.params.id)
+        var PrevPost = await axios.get('posts' + '?id=' + this.$route.params.id)
         this.subject = PrevPost.data.subject
         this.editorData = PrevPost.data.content
     },
@@ -41,7 +41,7 @@ export default {
             let token = localStorage.getItem('access_token')
             axios({
                 method: 'put',
-                url: 'http://127.0.0.1:8000/api/posts' + '?id=' + this.$route.params.id,
+                url: 'posts' + '?id=' + this.$route.params.id,
                 data: JSON.stringify({
                     "subject": this.subject,
                     "content": this.editorData

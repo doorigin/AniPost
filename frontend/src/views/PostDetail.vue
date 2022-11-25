@@ -79,17 +79,17 @@ export default {
   },
   async beforeCreate() {
     await axios
-      .get('http://127.0.0.1:8000/api/posts' + '?id=' + this.$route.query.id)
+      .get('posts' + '?id=' + this.$route.query.id)
       .then(response => (this.post = response.data))
     await axios
-      .get('http://127.0.0.1:8000/api/posts/comments' + '?id=' + this.$route.query.id)
+      .get('posts/comments' + '?id=' + this.$route.query.id)
       .then(response => (this.comments = response.data))
   },
   methods: {
     DeletePost() {
         let token = localStorage.getItem('access_token')
         console.log(token)
-        axios.delete('http://127.0.0.1:8000/api/posts' + '?id=' + this.$route.query.id, {
+        axios.delete('posts' + '?id=' + this.$route.query.id, {
             headers: {
                 'accept': 'application/json',
                 'Authorization': `bearer ${token}`
@@ -100,7 +100,7 @@ export default {
         let token = localStorage.getItem('access_token')
         axios({
             method: 'post',
-            url: 'http://127.0.0.1:8000/api/posts/comments' + '?id=' + this.$route.query.id,
+            url: 'posts/comments' + '?id=' + this.$route.query.id,
             data: JSON.stringify({
                 "content": this.new_comment
             }),
@@ -113,7 +113,7 @@ export default {
     },
     DeleteComment(id) {
         let token = localStorage.getItem('access_token')
-        axios.delete(`http://127.0.0.1:8000/api/post/delete_comment/${id}`, {
+        axios.delete(`post/delete_comment/${id}`, {
             headers: {
                 'Authorization': `bearer ${token}`
             }

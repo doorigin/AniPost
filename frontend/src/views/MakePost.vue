@@ -42,7 +42,7 @@ export default {
             console.log(this.editorData)
             axios({
                 method: 'post',
-                url: 'http://127.0.0.1:8000/api/posts',
+                url: 'posts',
                 data: JSON.stringify({
                     "subject": this.subject,
                     "content": this.editorData

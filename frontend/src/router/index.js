@@ -5,6 +5,11 @@ import PostDetail from '../views/PostDetail.vue';
 import home from '../views/home.vue'
 import LogIn from '../views/LogIn.vue'
 import SignUp from '../views/SignUp.vue'
+import axios from 'axios'
+
+axios.defaults.baseURL = 'http://127.0.0.1:8000/api/'
+axios.defaults.withCredentials = true
+
 
 const routes = [
     {

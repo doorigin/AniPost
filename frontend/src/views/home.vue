@@ -1,9 +1,7 @@
 <template>
     <div class="container my-3">
     <div class="row my-4">
-      <div>{{$store.state.userInfo.username}}</div>
-      <div>{{$store.state.userInfo.email}}</div>
-      <div>{{$store.state.userInfo.full_name}}</div>
+      <div>{{$store.state.userInfo}}</div>
     </div>
     <div class="row my-3">
         <div class="col-6">
@@ -57,7 +55,7 @@ export default {
   },
   async created() {
     await axios
-      .get('http://127.0.0.1:8000/api/posts/list')
+      .get('posts/list', {withCredentials: true})
       .then(response => (this.postdata = response.data))
   },
   methods: { //method가 아니고 query param으로 해결할것 (?search=제목2) url 바꾸는 식으로
@@ -65,7 +63,7 @@ export default {
       const paramsObj = {search_tag: this.searchkeyword}
       let queryParams = new URLSearchParams(paramsObj)
       axios
-      .get('http://127.0.0.1:8000/api/posts/list' + '?' + queryParams.toString())
+      .get('posts/list' + '?' + queryParams.toString())
       .then(response => (this.postdata = response.data))
     }
   },

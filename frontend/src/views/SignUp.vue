@@ -47,7 +47,7 @@ import axios from 'axios';
                 let token = localStorage.getItem("access_token")
                 axios({
                     method: 'post',
-                    url: 'http://127.0.0.1:8000/api/user/create',
+                    url: 'user/create',
                     data: JSON.stringify({
                         username: this.username,
                         full_name: this.fullname,
