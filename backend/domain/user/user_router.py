@@ -19,7 +19,7 @@ router = APIRouter(
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 2
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -98,6 +98,7 @@ async def login_for_access_token(response: Response, form_data: OAuth2PasswordRe
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
+    response.delete_cookie(key="access_token")
     response.set_cookie(
         key="access_token", 
         value=f"Bearer {access_token}"

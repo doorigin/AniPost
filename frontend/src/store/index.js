@@ -6,8 +6,7 @@ export default createStore({
   state: {
     userInfo: "로그인 전",
     isLogin: false,
-    isLoginError: false,
-    token: null
+    isLoginError: false
   },
   getters: {
   },
@@ -24,40 +23,34 @@ export default createStore({
       state.isLogin = false
       state.isLoginError = true
     },
-    setToken(state, payload) {
-      state.token = payload
+    logout(state) {
+      state.isLogin = false
+      state.isLoginError = false
     }
   },
   actions: {
-    login({ dispatch, commit }, loginObj) {
-      axios
+    async login({commit}, loginObj) {
+      await axios
         .post("user/token", loginObj, {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
         })
-        .then(res => {
-          // 성공 시 토큰을 받아 옴. 이걸 헤더에 포함시켜 유저 정보
-          let token = res.data.access_token
-          localStorage.setItem("access_token", token)
-          dispatch('getUserInfo')
-          commit('setToken', token)
-        })
+        .then(
+          await commit('loginSuccess')
+        )
         .catch((error) => {
-          alert(error)
+          console.log(error)
+          commit('loginError')
         })
+        // dispatch('getUserInfo')
       // this.$router.push("/")
       },
-    getUserInfo({ commit }) {
-      // let token = localStorage.getItem("access_token")
+    async getUserInfo({ commit }) {
       let config = {
-        // headers: {
-        //   "Authorization": `Bearer ${token}`
-        // }
         withCredentials: true,
-        // credentials: 'include'
       }
-      axios
+      await axios
         .get("user/me", config)
         .then(response => {
           console.log(response.data)
@@ -71,12 +64,13 @@ export default createStore({
           commit('loginSuccess', userInfo)
         })
         .catch(() => {
-          alert('이메일과 비밀번호를 확인하세요1')
+          console.log('이메일과 비밀번호를 확인하세요1')
         })
       },
     logout({ commit }) {
+      document.cookie = "access_token" + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'
       commit("logout")
-      router.push({ name: "home" })
+      router.push({ name: "Home" })
     }
   },
   modules: {

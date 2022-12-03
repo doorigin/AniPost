@@ -7,8 +7,11 @@ import './assets/styles/main.css'
 import store from './store/index.js'
 import CKEditor from '@ckeditor/ckeditor5-vue'
 
+// 로그인정보 가져오기
+store.dispatch('getUserInfo')
+
 const app = createApp({
-        extends: App,
+        extends: App
     })
     
 app.use(CKEditor)
